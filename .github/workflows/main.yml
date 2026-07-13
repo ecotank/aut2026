@@ -46,3 +46,7 @@ jobs:
           -p 4444:4444 \
           --name selenium \
           selenium/standalone-firefox
+
+    - name: Wait Selenium
+      run: |
+        ./wait.sh
