@@ -39,10 +39,10 @@ jobs:
         --name aut-container \
         aut2026
 
-        - name: Deploy Selenium
-    - run: |
+         - name: Deploy Selenium
+      run: |
         docker run -d \
-        --network=isolated \
-        -p 4444:4444 \
-        --name selenium \
-        selenium/standalone-firefox
+          --network=isolated \
+          -p 4444:4444 \
+          --name selenium \
+          selenium/standalone-firefox
