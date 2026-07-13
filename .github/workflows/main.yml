@@ -38,3 +38,11 @@ jobs:
         -p 8080:80 \
         --name aut-container \
         aut2026
+
+        - name: Deploy Selenium
+    - run: |
+        docker run -d \
+        --network=isolated \
+        -p 4444:4444 \
+        --name selenium \
+        selenium/standalone-firefox
