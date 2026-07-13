@@ -1,0 +1,38 @@
+name: AUT Deployment
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+
+  deploy:
+
+    name: Deploy AUT
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+
+    - name: Create Docker network
+      run: |
+        docker network create isolated
+
+
+    - name: Build AUT Image
+      run: |
+        docker build -t aut2026 .
+
+
+    - name: Run AUT Container
+      run: |
+        docker run -d \
+        --network=isolated \
+        -p 8080:80 \
+        --name aut-container \
+        aut2026
