@@ -15,7 +15,7 @@ driver = webdriver.Remote(
 
 try:
     # membuka halaman AUT
-    driver.get("http://localhost:8080")
+    driver.get("http://localhost:8081")
 
     time.sleep(3)
 
