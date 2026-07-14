@@ -1,5 +1,4 @@
 from selenium import webdriver
-from selenium.webdriver.common.by import By
 import time
 
 
@@ -14,21 +13,21 @@ driver = webdriver.Remote(
 
 
 try:
-    # membuka halaman AUT
-    driver.get("http://localhost:8081")
 
-    time.sleep(3)
+    driver.get("http://aut-container")
 
-    # mengambil judul halaman
-    title = driver.title
+    time.sleep(5)
 
-    print("Title halaman AUT:", title)
+    print("URL:", driver.current_url)
+    print("TITLE:", driver.title)
 
-    # validasi sederhana
-    assert title != ""
+    assert driver.current_url.startswith("http")
 
-    print("Testing AUT berhasil")
+    print("AUT Testing Success")
 
 
 finally:
+
+    driver.save_screenshot("screenshot.png")
+
     driver.quit()

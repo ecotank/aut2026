@@ -21,46 +21,71 @@ jobs:
       uses: actions/checkout@v4
 
 
-    - name: Create Docker network
+    # Membuat network agar AUT dan Selenium dapat berkomunikasi
+    - name: Create Docker Network
       run: |
-        docker network create isolated
+        docker network create test-network
 
 
+    # Build aplikasi AUT
     - name: Build AUT Image
       run: |
         docker build -t aut2026 .
 
 
-    - name: Run AUT Container
+    # Menjalankan aplikasi AUT
+    - name: Deploy AUT Container
       run: |
         docker run -d \
-        --network=isolated \
-        -p 8081:80 \
+        --network test-network \
         --name aut-container \
+        -p 8081:80 \
         aut2026
 
-    - name: Deploy Selenium
+
+    # Menjalankan Selenium Firefox Container
+    - name: Deploy Selenium Container
       run: |
         docker run -d \
-          --network=isolated \
-          -p 4444:4444 \
-          --name selenium \
-          selenium/standalone-firefox
+        --network test-network \
+        --name selenium \
+        -p 4444:4444 \
+        selenium/standalone-firefox
 
+
+    # Menunggu Selenium siap digunakan
     - name: Wait Selenium
       run: |
+        chmod +x wait.sh
         ./wait.sh
 
-    - name: Install Selenium Python
+
+    # Install Selenium Python Client
+    - name: Install Selenium Client
       run: |
         pip install selenium
 
+
+    # Mengecek container berjalan
+    - name: Check Docker Containers
+      run: |
+        docker ps
+        echo "===== AUT LOG ====="
+        docker logs aut-container
+        echo "===== SELENIUM LOG ====="
+        docker logs selenium
+
+
+    # Testing AUT menggunakan Selenium
     - name: Run Selenium Test
       run: |
-        python tests/hello_aut.py      
-      
+        python tests/hello_aut.py
+
+
+    # Menyimpan screenshot hasil testing
     - name: Upload Screenshot Artifact
       uses: actions/upload-artifact@v4
+      if: always()
       with:
         name: selenium-screenshot
         path: screenshot.png
